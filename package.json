@@ -1,0 +1,24 @@
+{
+  "name": "file-partition",
+  "version": "1.0.0",
+  "description": "",
+  "main": "runner.js",
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miker1423/file-partition.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miker1423/file-partition/issues"
+  },
+  "homepage": "https://github.com/miker1423/file-partition#readme"
+}
