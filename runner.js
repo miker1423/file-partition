@@ -1,6 +1,7 @@
 var Server = require("./server.js");
 var Client = require("./client.js");
 var Splitter = require("./splitter.js");
+var FileOperator = require("./fileOperator.js");
 var readline = require("readline");
 var net = require("net")
 
@@ -13,13 +14,22 @@ rl.question("Start (s)ever or (c)lient\n", answer => {
             if(answer == "send"){
                 var splitter = new Splitter();
                 splitter.Split(__dirname+"/text.txt", 3, (err, data)=>{
+                    var operator = new FileOperator();
                     data.forEach(slice => {
-                        console.log(slice.Name);
-                        console.log(slice.Content.toString("utf-8"));
+                        operator.SaveFile(slice);
                     });
                 });
             } else if(answer == "get"){
-                console.log("not supported");
+                rl.question("Write the file name to retrieve\n", answer => {
+                    var operator = new FileOperator();
+                    operator.GetFile(answer, 1, data => {
+                        if(data != null){
+                            var obj = JSON.parse(data);
+                            var buffer = new Buffer(obj.Content);
+                            console.log(buffer.toString("utf-8"));
+                        }
+                    });
+                });
             }
         });
     } else if(answer == "c"){

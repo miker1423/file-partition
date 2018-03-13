@@ -35,7 +35,7 @@ module.exports = class Splitter {
                     "Slice": index,
                     "Name": filename,
                     "Extension": fileExtension,
-                    "Content": new Buffer(tempArray),
+                    "Content": tempArray
                 };
 
                 k += maxSize;
