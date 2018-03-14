@@ -28,7 +28,6 @@ module.exports = class FileOperator{
             }
             var hasFound = false;
             files.forEach(file => {
-                console.log(file);
                 if(file == fileName+"-"+chunk+".json"){
                     hasFound = true;
                     fs.readFile(path+"/"+file, (err, data) => {

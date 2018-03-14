@@ -23,15 +23,16 @@ module.exports = class Client {
 
         this.socket.on("end", data => {
             try{
-                console.log(this.buffer);
-                var obj = JSON.parse(this.buffer);
-                if (Array.isArray(obj)) {
-                    fileOperator.SaveFile(obj[0]);
-                    fileOperator.SaveFile(obj[1]);
-                } else {
-                    fileOperator.GetFile(obj.Filename, obj.Partition, file => {
-                        this.Send(file);
-                    })
+                if(buffer != ""){
+                    var obj = JSON.parse(this.buffer);
+                    if (Array.isArray(obj)) {
+                        fileOperator.SaveFile(obj[0]);
+                        fileOperator.SaveFile(obj[1]);
+                    } else {
+                        fileOperator.GetFile(obj.Filename, obj.Partition, file => {
+                            this.Send(file);
+                        });
+                    }
                 }
             }catch(err){
                 console.log(err)

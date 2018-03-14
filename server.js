@@ -74,7 +74,7 @@ module.exports = class Server {
 
         var json = JSON.stringify(query);
         for(var i = 0; i < this.connectionCount; i++){
-            this.connections[i].end(json);
+            this.connections[i].write(json);
         }
 
         /*
