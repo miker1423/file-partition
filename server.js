@@ -6,9 +6,12 @@ module.exports = class Server {
         this.files = new Object();
         this.connections = new Array();
         var server = net.createServer();
+
+        server.on("error", err => {
+            console.log(err);
+        });
         
         server.on("connection", socket => {
-            socket.write("Hello user");
             socket.on("data", data => {
                 var obj = JSON.parse(data);
                 if(obj != null || obj != undefined){
@@ -30,6 +33,10 @@ module.exports = class Server {
                 files[socket] = null; 
             });
 
+            socket.on("error", err =>{
+                console.log(err);
+            })
+
             this.connections.push(socket);
         
             console.log("New client!")
@@ -45,10 +52,16 @@ module.exports = class Server {
     }
 
     Send(partitions) {
-        for(i = 0; i < this.connectionCount();i++){
-            var slices =[ partitions[i], partitions[i+1%this.connectionCount]];
+        for(var i = 0; i < this.connectionCount; i++){
+            var next =  i + 1;
+            if(next == partitions.length){
+                next = next % partitions.length;
+            }
+
+            var slices =[ partitions[i], partitions[next]];
             var json = JSON.stringify(slices);
             this.connections[i].write(json);
+            this.connections[i].end();
         }
     }
 

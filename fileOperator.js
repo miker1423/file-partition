@@ -7,14 +7,16 @@ module.exports = class FileOperator{
     }
 
     SaveFile(fileDescriptor){
-        dir(this.basePath + fileDescriptor.Name, err => {
-            if(err){
-                console.log(err)
-                return;
-            }
-
-            fs.writeFile(this.basePath+fileDescriptor.Name+"/"+fileDescriptor.Name+"-"+fileDescriptor.Slice+".json", JSON.stringify(fileDescriptor));
-        });
+        if(fileDescriptor != null){
+            dir(this.basePath + fileDescriptor.Name, err => {
+                if(err){
+                    console.log(err)
+                    return;
+                }
+    
+                fs.writeFile(this.basePath+fileDescriptor.Name+"/"+fileDescriptor.Name+"-"+fileDescriptor.Slice+".json", JSON.stringify(fileDescriptor));
+            });
+        }
     }
 
     GetFile(fileName, chunk, callback){
