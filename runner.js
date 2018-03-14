@@ -29,9 +29,11 @@ rl.question("Start (s)ever or (c)lient\n", answer => {
 
         rl.question("Write \"send\" to send file\nWrite \"get\" to retrieve a file", answer => {
             if (answer == "send") {
-                var splitter = new Splitter();
-                splitter.Split(__dirname + "/text.txt", server.connectionCount, (err, data) => {
-                    server.Send(data);
+                rl.question("write the absolute path to file", answer =>{
+                    var splitter = new Splitter();
+                    splitter.Split(answer, server.connectionCount, (err, data) => {
+                        server.Send(data);
+                    });
                 });
             } else if (answer == "get") {
                 rl.question("Write the file name to retrieve\n", answer => {
