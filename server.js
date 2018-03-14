@@ -20,29 +20,15 @@ module.exports = class Server {
             });
 
             socket.on("end", data => {
-                var obj = JSON.parse(buffer);
-                if(obj != null || obj != undefined){
-                    callback(obj);
-
-                    /*
-                    this.files[socket] = obj;
-
-                    var hasbeensaved = false;
-                    for(var savedfile of this.receivedFile){
-                        if(savedfile.Slice == obj.Slice){
-                            hasbeensaved = true;
-                            break;
-                        }
+                if(buffer != ""){
+                    var obj = JSON.parse(buffer);
+                    if(obj != null || obj != undefined){
+                        callback(obj);
+                    }else{
+                        console.log("null");
+                        callback(null);
                     }
-
-                    if(!hasbeensaved){
-                        this.receivedFile.push(obj);
-                        if(this.receivedFile.length == this.connectionCount){
-                            callback(this.receivedFile);
-                        }
-                    }*/
                 }else{
-                    console.log("null");
                     callback(null);
                 }
             });

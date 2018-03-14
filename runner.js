@@ -25,21 +25,6 @@ rl.question("Start (s)ever or (c)lient\n", answer => {
                 stop = true;
                 clearInterval(timer);
             }
-
-            /*
-            for(var i = 0; i < this.files.length - 1; i++){
-                if(this.files[i].Slice == this.files[i+1].Slice){
-                    this.files.splice(i, 1);
-                }
-            }
-
-            files
-            .sort((a, b) => a.Partition - b.Partition)
-            .forEach(file => {
-                var buffer = Buffer.from(file.Content);
-                text += buffer.toString("utf-8")
-            });
-            */
         });
 
         rl.question("Write \"send\" to send file\nWrite \"get\" to retrieve a file", answer => {
