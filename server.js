@@ -1,7 +1,7 @@
 var net = require('net');
 
 module.exports = class Server {
-    constructor(){
+    constructor(callback){
         this.receivedFile = new Array();
         this.files = new Object();
         this.connections = new Array();
@@ -12,25 +12,37 @@ module.exports = class Server {
         });
         
         server.on("connection", socket => {
+            var buffer = "";
+
             socket.on("data", data => {
-                var obj = JSON.parse(data);
-                if(obj != null || obj != undefined){
-                    files[socket] = file;
-
-                    var hasbeensaved = false;
-                    for(var savedfile in this.receivedFile){
-                        if(savedfile == file){
-                            hasbeensaved = true;
-                            break;
+                try{
+                    var obj = JSON.parse(buffer);
+                    if(obj != null || obj != undefined){
+                        this.files[socket] = obj;
+    
+                        var hasbeensaved = false;
+                        for(var savedfile in this.receivedFile){
+                            if(savedfile == file){
+                                hasbeensaved = true;
+                                break;
+                            }
                         }
+    
+                        if(!hasbeensaved){
+                            this.receivedFile.push(obj);
+                            if(this.receivedFile.length == this.connectionCount){
+                                callback(this.receivedFile);
+                            }
+                        }
+                    }else{
+                       this.files[socket] = null; 
                     }
-
-                    if(!hasbeensaved){
-                        this.receivedFile.push(file);
-                    }
+                }catch(ex){
+                    buffer += data.toString("utf-8")
                 }
+            });
 
-                files[socket] = null; 
+            socket.on("end", data => {
             });
 
             socket.on("error", err =>{
@@ -67,12 +79,12 @@ module.exports = class Server {
 
     Get(fileName) {
         var stop = false;
-        var query = {
+        /*var query = {
             "Partition": 0,
             "Filename": fileName
-        };
+        };*/
 
-        var json = JSON.stringify(query);
+        var json = JSON.stringify(fileName);
         for(var i = 0; i < this.connectionCount; i++){
             this.connections[i].write(json);
         }
@@ -90,8 +102,7 @@ module.exports = class Server {
                     stop = true;
                 }
             }
-        }*/
-
-        return this.receivedFile;
+        }
+        */
     }
 }

@@ -20,12 +20,14 @@ module.exports = class FileOperator{
     }
 
     GetFile(fileName, chunk, callback){
+        console.log(chunk)
         var path = this.basePath+fileName;
         fs.readdir(path, (err, files)=>{
             if(err){
-                callback(null);
+                callback("");
                 return;
             }
+
             var hasFound = false;
             files.forEach(file => {
                 if(file == fileName+"-"+chunk+".json"){
@@ -39,7 +41,7 @@ module.exports = class FileOperator{
                 }
 
                 if(!hasFound){
-                    callback(null);
+                    callback("");
                 }
             });
         });

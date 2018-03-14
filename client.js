@@ -12,9 +12,9 @@ module.exports = class Client {
 
         this.socket.on("data", data => {
             try{
-                var obj = JSON.parse(data);
+                var obj = JSON.parse(data.toString("utf-8"));
                 fileOperator.GetFile(obj.Filename, obj.Partition, file => {
-                    this.Send(file);
+                    this.socket.write(file);
                 });
             }catch(ex){
                 this.buffer += data.toString("utf-8");
@@ -23,14 +23,17 @@ module.exports = class Client {
 
         this.socket.on("end", data => {
             try{
-                if(buffer != ""){
+                if(this.buffer != ""){
                     var obj = JSON.parse(this.buffer);
                     if (Array.isArray(obj)) {
                         fileOperator.SaveFile(obj[0]);
                         fileOperator.SaveFile(obj[1]);
                     } else {
                         fileOperator.GetFile(obj.Filename, obj.Partition, file => {
-                            this.Send(file);
+                            var json = file.toString("utf-8");
+                            console.log(json);
+
+                            this.socket.write(json);
                         });
                     }
                 }
