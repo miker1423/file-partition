@@ -11,10 +11,17 @@ module.exports = class Client {
         this.buffer = ""
 
         this.socket.on("data", data => {
-            this.buffer += data.toString("utf-8");
+            try{
+                var obj = JSON.parse(data);
+                fileOperator.GetFile(obj.Filename, obj.Partition, file => {
+                    this.Send(file);
+                });
+            }catch(ex){
+                this.buffer += data.toString("utf-8");
+            }
         });
 
-        this.socket.on("end", socket => {
+        this.socket.on("end", data => {
             try{
                 console.log(this.buffer);
                 var obj = JSON.parse(this.buffer);
@@ -22,8 +29,8 @@ module.exports = class Client {
                     fileOperator.SaveFile(obj[0]);
                     fileOperator.SaveFile(obj[1]);
                 } else {
-                    fileOperator.GetFile(fileName, partition, data => {
-                        this.socket.write(data, "utf-8");
+                    fileOperator.GetFile(obj.Filename, obj.Partition, file => {
+                        this.Send(file);
                     })
                 }
             }catch(err){

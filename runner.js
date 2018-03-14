@@ -19,7 +19,7 @@ rl.question("Start (s)ever or (c)lient\n", answer => {
             } else if (answer == "get") {
                 rl.question("Write the file name to retrieve\n", answer => {
                     var files = server.Get(answer);
-                    var buffer = new Buffer();
+                    var buffer = new Buffer("");
                     files
                     .sort((a, b) => a.Partition - b.Partition)
                     .forEach(file => buffer.concat(file.Content.toString("utf-8")));

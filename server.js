@@ -72,15 +72,17 @@ module.exports = class Server {
             "Filename": fileName
         };
 
+        var json = JSON.stringify(query);
+        for(var i = 0; i < this.connectionCount; i++){
+            this.connections[i].end(json);
+        }
+
+        /*
         while(!stop){
-            
-            var json = JSON.stringify(query);
-            this.connections.forEach(socket => {
-                socket.write(json);
-            });
+
             query.Partition++;
 
-            for(var key in files){
+            for(var key in this.files){
                 if(files[key] != null || files[key] != undefined){
                     stop = false;
                     break;
@@ -88,7 +90,7 @@ module.exports = class Server {
                     stop = true;
                 }
             }
-        }
+        }*/
 
         return this.receivedFile;
     }
