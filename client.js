@@ -14,7 +14,7 @@ module.exports = class Client {
             try{
                 var obj = JSON.parse(data.toString("utf-8"));
                 fileOperator.GetFile(obj.Filename, obj.Partition, file => {
-                    this.socket.write(file);
+                    this.socket.end(file);
                 });
             }catch(ex){
                 this.buffer += data.toString("utf-8");

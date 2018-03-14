@@ -15,34 +15,36 @@ module.exports = class Server {
             var buffer = "";
 
             socket.on("data", data => {
-                try{
-                    var obj = JSON.parse(buffer);
-                    if(obj != null || obj != undefined){
-                        this.files[socket] = obj;
-    
-                        var hasbeensaved = false;
-                        for(var savedfile in this.receivedFile){
-                            if(savedfile == file){
-                                hasbeensaved = true;
-                                break;
-                            }
-                        }
-    
-                        if(!hasbeensaved){
-                            this.receivedFile.push(obj);
-                            if(this.receivedFile.length == this.connectionCount){
-                                callback(this.receivedFile);
-                            }
-                        }
-                    }else{
-                       this.files[socket] = null; 
-                    }
-                }catch(ex){
-                    buffer += data.toString("utf-8")
-                }
+                console.log(data.toString("utf-8"));
+                buffer += data.toString("utf-8")
             });
 
             socket.on("end", data => {
+                var obj = JSON.parse(buffer);
+                if(obj != null || obj != undefined){
+                    callback(obj);
+
+                    /*
+                    this.files[socket] = obj;
+
+                    var hasbeensaved = false;
+                    for(var savedfile of this.receivedFile){
+                        if(savedfile.Slice == obj.Slice){
+                            hasbeensaved = true;
+                            break;
+                        }
+                    }
+
+                    if(!hasbeensaved){
+                        this.receivedFile.push(obj);
+                        if(this.receivedFile.length == this.connectionCount){
+                            callback(this.receivedFile);
+                        }
+                    }*/
+                }else{
+                    console.log("null");
+                    callback(null);
+                }
             });
 
             socket.on("error", err =>{
@@ -79,30 +81,10 @@ module.exports = class Server {
 
     Get(fileName) {
         var stop = false;
-        /*var query = {
-            "Partition": 0,
-            "Filename": fileName
-        };*/
 
         var json = JSON.stringify(fileName);
         for(var i = 0; i < this.connectionCount; i++){
             this.connections[i].write(json);
         }
-
-        /*
-        while(!stop){
-
-            query.Partition++;
-
-            for(var key in this.files){
-                if(files[key] != null || files[key] != undefined){
-                    stop = false;
-                    break;
-                } else {
-                    stop = true;
-                }
-            }
-        }
-        */
     }
 }

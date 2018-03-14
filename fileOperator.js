@@ -20,7 +20,6 @@ module.exports = class FileOperator{
     }
 
     GetFile(fileName, chunk, callback){
-        console.log(chunk)
         var path = this.basePath+fileName;
         fs.readdir(path, (err, files)=>{
             if(err){
