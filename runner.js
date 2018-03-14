@@ -7,32 +7,27 @@ var net = require("net")
 
 var rl = readline.createInterface(process.stdin, process.stdout);
 rl.question("Start (s)ever or (c)lient\n", answer => {
-    if(answer == "s"){
+    if (answer == "s") {
         var server = new Server();
 
-        rl.question("Write \"send\" to send file\nWrite \"get\" to retrieve a file", answer =>{
-            if(answer == "send"){
+        rl.question("Write \"send\" to send file\nWrite \"get\" to retrieve a file", answer => {
+            if (answer == "send") {
                 var splitter = new Splitter();
-                splitter.Split(__dirname+"/text.txt", 3, (err, data)=>{
-                    var operator = new FileOperator();
-                    data.forEach(slice => {
-                        operator.SaveFile(slice);
-                    });
+                splitter.Split(__dirname + "/text.txt", server.connectionCount, (err, data) => {
+                    server.Send(data);
                 });
-            } else if(answer == "get"){
+            } else if (answer == "get") {
                 rl.question("Write the file name to retrieve\n", answer => {
-                    var operator = new FileOperator();
-                    operator.GetFile(answer, 1, data => {
-                        if(data != null){
-                            var obj = JSON.parse(data);
-                            var buffer = new Buffer(obj.Content);
-                            console.log(buffer.toString("utf-8"));
-                        }
-                    });
+                    var files = server.Get(answer);
+                    var buffer = new Buffer();
+                    files
+                    .sort((a, b) => a.Partition - b.Partition)
+                    .forEach(file => buffer.concat(file.Content.toString("utf-8")));
+                    console.log(buffer.toString("utf-8"));
                 });
             }
         });
-    } else if(answer == "c"){
+    } else if (answer == "c") {
         rl.question("Write the host IP Address\n", address => {
             var client = new Client(address);
         });

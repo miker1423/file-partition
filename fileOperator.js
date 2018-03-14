@@ -20,9 +20,10 @@ module.exports = class FileOperator{
     GetFile(fileName, chunk, callback){
         var path = this.basePath+fileName;
         fs.readdir(path, (err, files)=>{
-            if(err)
+            if(err){
+                callback(null);
                 return;
-            
+            }
             var hasFound = false;
             files.forEach(file => {
                 console.log(file);
