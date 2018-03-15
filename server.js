@@ -15,7 +15,6 @@ module.exports = class Server {
             var buffer = "";
 
             socket.on("data", data => {
-                console.log(data.toString("utf-8"));
                 buffer += data.toString("utf-8")
             });
 
@@ -24,6 +23,7 @@ module.exports = class Server {
                     var obj = JSON.parse(buffer);
                     if(obj != null || obj != undefined){
                         callback(obj);
+                        buffer = "";
                     }else{
                         console.log("null");
                         callback(null);
